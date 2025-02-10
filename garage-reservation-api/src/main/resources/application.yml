@@ -1,0 +1,39 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+spring:
+  mvc:
+    servlet:
+      path: /garage/api/v1
+  datasource:
+    url: jdbc:h2:mem:garage-db
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  sql:
+    init:
+      schema-locations: classpath:sql/schema.sql
+      data-locations: classpath:sql/data.sql
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  cache:
+    cache-names: availableSlots
+    caffeine:
+      spec: maximumSize=1000,expireAfterWrite=10m
+  h2:
+    console:
+      enabled: true
+      path: /garage/h2-console
+
+garage:
+  reservation:
+    max-advance-days: 14  # Maximum number of days in advance a reservation can be made.
+    min-advance-minutes: 30  # Minimum number of minutes before the start time that a reservation must be made.
+    default-slot-duration: 30  # Default duration of an appointment slot, in minutes, if not specified otherwise.
