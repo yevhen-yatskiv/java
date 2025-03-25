@@ -7,6 +7,7 @@ import com.bloomreach.garage.reservation.config.ReservationProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,15 @@ public class SlotCalculator {
         // Calculate minimum advance time
         LocalTime nowPlusMinAdvance = LocalTime.now().plusMinutes(reservationProperties.getMinAdvanceMinutes());
 
+        // Convert start time and nowPlusMinAdvance to LocalDateTime for proper comparison
+        LocalDateTime startDateTime = LocalDateTime.of(LocalDateTime.now().toLocalDate(), start);
+        LocalDateTime nowPlusMinAdvanceDateTime = LocalDateTime.of(LocalDateTime.now().toLocalDate(), nowPlusMinAdvance);
+
+        // If start time is before nowPlusMinAdvance, check if it's on the next day
+        if (startDateTime.isBefore(nowPlusMinAdvanceDateTime)) {
+            startDateTime = startDateTime.plusDays(1);  // Adjust for the next day if needed
+        }
+
         // Calculate possible time slots
         while (start.plusMinutes(minDuration).isBefore(end)) {
             boolean canAccommodateAll = true;
@@ -52,7 +62,7 @@ public class SlotCalculator {
                 }
             }
 
-            if (canAccommodateAll && !start.isBefore(nowPlusMinAdvance)) {
+            if (canAccommodateAll && !startDateTime.isBefore(nowPlusMinAdvanceDateTime)) {
                 availableSlots.add(new AvailableSlot(start, slotEnd));
             }
 
