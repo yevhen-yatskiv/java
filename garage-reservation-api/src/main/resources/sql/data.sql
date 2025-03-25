@@ -45,13 +45,13 @@ INSERT INTO garage_closure_types (name) VALUES ('Maintenance');
 
 -- **Garage Closures**
 
--- Adding holidays in Netherlands for 2024
+-- Adding holidays in Netherlands for 2025
 INSERT INTO garage_closures (closure_date, closure_type_id, description) VALUES
-('2024-01-01', (SELECT id FROM garage_closure_types WHERE name = 'Public Holiday'), 'New Years Day'),
-('2024-04-27', (SELECT id FROM garage_closure_types WHERE name = 'Public Holiday'), 'Kings Day'),
-('2024-05-05', (SELECT id FROM garage_closure_types WHERE name = 'Public Holiday'), 'Liberation Day'),
-('2024-12-25', (SELECT id FROM garage_closure_types WHERE name = 'Public Holiday'), 'Christmas Day'),
-('2024-12-26', (SELECT id FROM garage_closure_types WHERE name = 'Public Holiday'), 'Boxing Day');
+('2025-01-01', (SELECT id FROM garage_closure_types WHERE name = 'Public Holiday'), 'New Years Day'),
+('2025-04-27', (SELECT id FROM garage_closure_types WHERE name = 'Public Holiday'), 'Kings Day'),
+('2025-05-05', (SELECT id FROM garage_closure_types WHERE name = 'Public Holiday'), 'Liberation Day'),
+('2025-12-25', (SELECT id FROM garage_closure_types WHERE name = 'Public Holiday'), 'Christmas Day'),
+('2025-12-26', (SELECT id FROM garage_closure_types WHERE name = 'Public Holiday'), 'Boxing Day');
 
 -- **Customers**
 
