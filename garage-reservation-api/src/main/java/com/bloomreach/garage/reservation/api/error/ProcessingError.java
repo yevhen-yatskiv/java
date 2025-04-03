@@ -29,7 +29,7 @@ public class ProcessingError extends RuntimeException {
      *
      * @param message the detail message.
      */
-    public ProcessingError(String message) {
+    public ProcessingError(final String message) {
         super(message);
     }
 }

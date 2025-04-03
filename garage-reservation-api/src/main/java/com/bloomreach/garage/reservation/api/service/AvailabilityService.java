@@ -46,27 +46,27 @@ public class AvailabilityService {
      * @throws ValidationError if the date is not within the allowed range.
      */
     @Cacheable(value = "availableSlots", key = "#date.toString() + '-' + #operationIds.toString()")
-    public List<AvailableSlot> findAvailableSlots(LocalDate date, List<Long> operationIds) {
+    public List<AvailableSlot> findAvailableSlots(final LocalDate date, final List<Long> operationIds) {
         availabilityValidator.validate(date, operationIds);
 
-        List<GarageOperation> operations = garageOperationRepository.findAllById(operationIds);
+        final List<GarageOperation> operations = garageOperationRepository.findAllById(operationIds);
         if (operations.size() != operationIds.size()) {
             throw new ValidationError(ErrorMessage.OPERATION_NOT_FOUND);
         }
 
         // Fetch all employee working hours for the specified date
-        List<EmployeeWorkingHours> availableMechanics = employeeWorkingHoursRepository.findByDayOfWeek(date.getDayOfWeek());
-        Set<AvailableSlot> availableSlotsSet = new HashSet<>();
+        final List<EmployeeWorkingHours> availableMechanics = employeeWorkingHoursRepository.findByDayOfWeek(date.getDayOfWeek());
+        final Set<AvailableSlot> availableSlotsSet = new HashSet<>();
 
         // For each mechanic, calculate slots and filter out those that are booked
-        for (EmployeeWorkingHours workingHours : availableMechanics) {
+        for (final EmployeeWorkingHours workingHours : availableMechanics) {
             // Fetch all booked slots for the mechanic on the given date
-            List<GarageAppointmentOperation> bookedSlots = garageAppointmentOperationRepository.findOverlappingAppointments(
+            final List<GarageAppointmentOperation> bookedSlots = garageAppointmentOperationRepository.findOverlappingAppointments(
                     workingHours.getEmployee().getId(), date, workingHours.getStartTime(), workingHours.getEndTime());
 
             // Filter out booked slots from the available slots
-            List<AvailableSlot> slots = slotCalculator.calculateSlots(workingHours, operations);
-            List<AvailableSlot> filteredSlots = slots.stream()
+            final List<AvailableSlot> slots = slotCalculator.calculateSlots(workingHours, operations);
+            final List<AvailableSlot> filteredSlots = slots.stream()
                     .filter(slot -> bookedSlots.stream()
                             .noneMatch(bookedSlot -> slot.getStartTime().isBefore(bookedSlot.getEndTime())
                                     && slot.getEndTime().isAfter(bookedSlot.getStartTime())))
@@ -90,14 +90,14 @@ public class AvailabilityService {
      * @return True if a mechanic is available, false otherwise.
      * @throws ProcessingError if any of the operation IDs are not found.
      */
-    public boolean isMechanicAvailable(LocalDate date, LocalTime startTime, LocalTime endTime, List<Long> operationIds) {
-        List<GarageOperation> operations = garageOperationRepository.findAllById(operationIds);
+    public boolean isMechanicAvailable(final LocalDate date, final LocalTime startTime, final LocalTime endTime, final List<Long> operationIds) {
+        final List<GarageOperation> operations = garageOperationRepository.findAllById(operationIds);
         if (operations.size() != operationIds.size()) {
             throw new ProcessingError(ErrorMessage.OPERATION_NOT_FOUND);
         }
 
-        List<EmployeeWorkingHours> availableMechanics = employeeWorkingHoursRepository.findByDayOfWeek(date.getDayOfWeek());
-        for (EmployeeWorkingHours workingHours : availableMechanics) {
+        final List<EmployeeWorkingHours> availableMechanics = employeeWorkingHoursRepository.findByDayOfWeek(date.getDayOfWeek());
+        for (final EmployeeWorkingHours workingHours : availableMechanics) {
             if (startTime.isBefore(workingHours.getEndTime()) && endTime.isAfter(workingHours.getStartTime())) {
                 return true;
             }

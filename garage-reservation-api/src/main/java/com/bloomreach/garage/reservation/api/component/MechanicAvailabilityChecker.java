@@ -31,12 +31,12 @@ public class MechanicAvailabilityChecker {
      * @param endTime   The end time of the appointment.
      * @return A list of available mechanics who are not assigned to other appointments.
      */
-    public List<Employee> findAvailableMechanics(LocalDate date, LocalTime startTime, LocalTime endTime) {
+    public List<Employee> findAvailableMechanics(final LocalDate date, final LocalTime startTime, final LocalTime endTime) {
         // Fetch all working hours for the mechanics on the specified day of the week
-        List<EmployeeWorkingHours> workingHoursList = employeeWorkingHoursRepository.findByDayOfWeek(date.getDayOfWeek());
+        final List<EmployeeWorkingHours> workingHoursList = employeeWorkingHoursRepository.findByDayOfWeek(date.getDayOfWeek());
 
         // Create a map of employeeId to their working hours
-        Map<Long, List<EmployeeWorkingHours>> employeeWorkingHoursMap = workingHoursList.stream()
+        final Map<Long, List<EmployeeWorkingHours>> employeeWorkingHoursMap = workingHoursList.stream()
                 .collect(Collectors.groupingBy(workingHours -> workingHours.getEmployee().getId()));
 
         // Filter and find available mechanics based on working hours and appointment time slot
@@ -44,7 +44,7 @@ public class MechanicAvailabilityChecker {
                 .map(EmployeeWorkingHours::getEmployee)
                 .filter(employee -> {
                     // Get the working hours for the employee
-                    List<EmployeeWorkingHours> employeeWorkingHours = employeeWorkingHoursMap.get(employee.getId());
+                    final List<EmployeeWorkingHours> employeeWorkingHours = employeeWorkingHoursMap.get(employee.getId());
 
                     // If no working hours are found for the employee, they are not available
                     if (employeeWorkingHours == null) {
@@ -70,7 +70,7 @@ public class MechanicAvailabilityChecker {
      * @param endTime    The end time of the appointment.
      * @return True if there are overlapping appointments, false otherwise.
      */
-    private boolean hasOverlappingAppointments(Long employeeId, LocalDate date, LocalTime startTime, LocalTime endTime) {
+    private boolean hasOverlappingAppointments(final Long employeeId, final LocalDate date, final LocalTime startTime, final LocalTime endTime) {
         return !garageAppointmentOperationRepository
                 .findOverlappingAppointments(employeeId, date, startTime, endTime)
                 .isEmpty();

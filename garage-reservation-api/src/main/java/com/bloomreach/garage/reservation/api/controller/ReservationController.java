@@ -55,8 +55,8 @@ public class ReservationController {
             @ApiResponse(responseCode = "400", description = "Processing error",
                     content = @Content(schema = @Schema(implementation = ProcessingError.class)))
     })
-    public List<AvailableSlot> findAvailableSlots(@RequestParam LocalDate date,
-                                                  @RequestParam List<Long> operationIds) {
+    public List<AvailableSlot> findAvailableSlots(@RequestParam final LocalDate date,
+                                                  @RequestParam final List<Long> operationIds) {
         return availabilityService.findAvailableSlots(date, operationIds);
     }
 
@@ -76,7 +76,7 @@ public class ReservationController {
             @ApiResponse(responseCode = "400", description = "Processing error",
                     content = @Content(schema = @Schema(implementation = ProcessingError.class)))
     })
-    public BookingResponse bookAppointments(@RequestBody BookingRequest bookingRequest) {
+    public BookingResponse bookAppointments(@RequestBody final BookingRequest bookingRequest) {
         return bookingService.bookAppointment(bookingRequest);
     }
 }

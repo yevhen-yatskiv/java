@@ -30,8 +30,8 @@ public class GarageBoxAllocator {
      * @return The allocated garage box.
      * @throws ProcessingError if no garage boxes are available.
      */
-    public GarageBox allocateGarageBox(LocalDate date, LocalTime startTime, LocalTime endTime) {
-        Page<GarageBox> page = garageBoxRepository.findAvailableBox(
+    public GarageBox allocateGarageBox(final LocalDate date, final LocalTime startTime, final LocalTime endTime) {
+        final Page<GarageBox> page = garageBoxRepository.findAvailableBox(
                 date, startTime, endTime, PageRequest.of(0, 1));
 
         return page.getContent().stream()

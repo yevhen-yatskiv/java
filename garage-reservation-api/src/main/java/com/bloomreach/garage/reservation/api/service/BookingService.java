@@ -45,41 +45,41 @@ public class BookingService {
      */
     @Transactional
     @CacheEvict(value = "availableSlots", allEntries = true/*, condition = "#date != null" */)
-    public BookingResponse bookAppointment(BookingRequest request) {
+    public BookingResponse bookAppointment(final BookingRequest request) {
         // Validate the booking request
         bookingValidator.validate(request);
 
         // Validate that the slot is available using AvailabilityService
-        boolean slotAvailable = availabilityService.isMechanicAvailable(
+        final boolean slotAvailable = availabilityService.isMechanicAvailable(
                 request.getDate(), request.getStartTime(), request.getEndTime(), request.getOperationIds());
         if (!slotAvailable) {
             throw new ProcessingError(ErrorMessage.NO_AVAILABLE_MECHANICS_FOR_THIS_TIME_SLOT);
         }
 
         // Fetch the first available garage box
-        GarageBox garageBox = garageBoxAllocator.allocateGarageBox(
+        final GarageBox garageBox = garageBoxAllocator.allocateGarageBox(
                 request.getDate(), request.getStartTime(), request.getEndTime());
 
         // Fetch the operations to be performed
-        List<GarageOperation> operations = garageOperationRepository.findAllById(request.getOperationIds());
+        final List<GarageOperation> operations = garageOperationRepository.findAllById(request.getOperationIds());
         if (operations.size() != request.getOperationIds().size()) {
             throw new ProcessingError(ErrorMessage.OPERATION_NOT_FOUND);
         }
 
         // Fetch the customer entity from the repository
-        Customer customer = customerRepository.findById(request.getCustomerId())
+        final Customer customer = customerRepository.findById(request.getCustomerId())
                 .orElseThrow(() -> new ProcessingError(ErrorMessage.INVALID_CUSTOMER_ID));
 
         // Find available mechanics for the operations
-        List<Employee> availableMechanics = mechanicAvailabilityChecker.findAvailableMechanics(
+        final List<Employee> availableMechanics = mechanicAvailabilityChecker.findAvailableMechanics(
                 request.getDate(), request.getStartTime(), request.getEndTime());
 
         // Build the appointment with the given details
-        GarageAppointment appointment = appointmentBuilder.buildAppointment(
+        final GarageAppointment appointment = appointmentBuilder.buildAppointment(
                 customer, request.getDate(), request.getStartTime(), request.getEndTime(), garageBox, operations, availableMechanics);
 
         // Save the appointment
-        GarageAppointment savedAppointment = garageAppointmentRepository.save(appointment);
+        final GarageAppointment savedAppointment = garageAppointmentRepository.save(appointment);
 
         // Build and return the response with the appointment and operation details
         return BookingResponse.builder()

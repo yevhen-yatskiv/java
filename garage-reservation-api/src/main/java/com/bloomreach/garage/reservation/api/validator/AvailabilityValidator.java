@@ -28,14 +28,13 @@ public class AvailabilityValidator {
      * @param operationIds The list of operations.
      * @throws ValidationError if the date is not within the allowed range.
      */
-    public void validate(LocalDate date, List<Long> operationIds) {
-        LocalDate now = LocalDate.now();
-        LocalDate maxDate = now.plusDays(reservationProperties.getMaxAdvanceDays());
-
+    public void validate(final LocalDate date, final List<Long> operationIds) {
+        final LocalDate now = LocalDate.now();
         if (date.isBefore(now)) {
             throw new ValidationError(ErrorMessage.DATE_CANNOT_BE_IN_THE_PAST);
         }
 
+        final LocalDate maxDate = now.plusDays(reservationProperties.getMaxAdvanceDays());
         if (date.isAfter(maxDate)) {
             throw new ValidationError(String.format(
                     ErrorMessage.DATE_CANNOT_BE_MORE_THAN, reservationProperties.getMaxAdvanceDays()));

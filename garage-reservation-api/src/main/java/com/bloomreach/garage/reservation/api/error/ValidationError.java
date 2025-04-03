@@ -29,7 +29,7 @@ public class ValidationError extends RuntimeException {
      *
      * @param message the detail message.
      */
-    public ValidationError(String message) {
+    public ValidationError(final String message) {
         super(message);
     }
 }

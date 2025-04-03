@@ -26,9 +26,9 @@ public class BookingValidator {
      * @param request The booking request to validate.
      * @throws ValidationError if the request violates the defined constraints.
      */
-    public void validate(BookingRequest request) {
-        LocalDate currentDate = LocalDate.now();
-        LocalTime currentTime = LocalTime.now();
+    public void validate(final BookingRequest request) {
+        final LocalDate currentDate = LocalDate.now();
+        final LocalTime currentTime = LocalTime.now();
 
         if (request.getDate().isAfter(currentDate.plusDays(reservationProperties.getMaxAdvanceDays()))) {
             throw new ValidationError(String.format(ErrorMessage.BOOKING_CANNOT_BE_MADE_MORE_THAN,
@@ -36,7 +36,7 @@ public class BookingValidator {
         }
 
         if (request.getDate().isEqual(currentDate)) {
-            Duration durationBetweenNowAndBooking = Duration.between(currentTime, request.getStartTime());
+            final Duration durationBetweenNowAndBooking = Duration.between(currentTime, request.getStartTime());
             if (durationBetweenNowAndBooking.toMinutes() < reservationProperties.getMinAdvanceMinutes()) {
                 throw new ValidationError(String.format(ErrorMessage.BOOKING_MUST_BE_MADE_AT_LEAST,
                         reservationProperties.getMinAdvanceMinutes()));

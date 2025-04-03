@@ -29,20 +29,20 @@ public class SlotCalculator {
      * @param operations   The list of operations to accommodate within the time slots.
      * @return A list of available time slots for the mechanic.
      */
-    public List<AvailableSlot> calculateSlots(EmployeeWorkingHours workingHours, List<GarageOperation> operations) {
-        List<AvailableSlot> availableSlots = new ArrayList<>();
+    public List<AvailableSlot> calculateSlots(final EmployeeWorkingHours workingHours, final List<GarageOperation> operations) {
+        final List<AvailableSlot> availableSlots = new ArrayList<>();
         LocalTime start = workingHours.getStartTime();
-        LocalTime end = workingHours.getEndTime();
+        final LocalTime end = workingHours.getEndTime();
 
         // Minimum slot duration
-        int minDuration = reservationProperties.getDefaultSlotDuration();
+        final int minDuration = reservationProperties.getDefaultSlotDuration();
 
         // Calculate minimum advance time
-        LocalTime nowPlusMinAdvance = LocalTime.now().plusMinutes(reservationProperties.getMinAdvanceMinutes());
+        final LocalTime nowPlusMinAdvance = LocalTime.now().plusMinutes(reservationProperties.getMinAdvanceMinutes());
 
         // Convert start time and nowPlusMinAdvance to LocalDateTime for proper comparison
         LocalDateTime startDateTime = LocalDateTime.of(LocalDateTime.now().toLocalDate(), start);
-        LocalDateTime nowPlusMinAdvanceDateTime = LocalDateTime.of(LocalDateTime.now().toLocalDate(), nowPlusMinAdvance);
+        final LocalDateTime nowPlusMinAdvanceDateTime = LocalDateTime.of(LocalDateTime.now().toLocalDate(), nowPlusMinAdvance);
 
         // If start time is before nowPlusMinAdvance, check if it's on the next day
         if (startDateTime.isBefore(nowPlusMinAdvanceDateTime)) {
@@ -54,7 +54,7 @@ public class SlotCalculator {
             boolean canAccommodateAll = true;
             LocalTime slotEnd = start;
 
-            for (GarageOperation operation : operations) {
+            for (final GarageOperation operation : operations) {
                 slotEnd = slotEnd.plusMinutes(operation.getDurationInMinutes());
                 if (slotEnd.isAfter(end)) {
                     canAccommodateAll = false;
